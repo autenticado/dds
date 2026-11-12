@@ -6,19 +6,18 @@
 <title>Pagamento via Pix</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:#eef6f7;font-family:Arial,sans-serif;color:#183a42;display:flex;align-items:center;justify-content:center}
-main{width:min(100%,600px);padding:24px 16px;text-align:center}
-h1{font-size:23px;margin:8px 0 12px}
-p{color:#57717a;font-size:14px;line-height:1.5}
-#erro{display:none;color:#a32a2a;background:#fff;padding:24px 18px;border-radius:16px}
-#aguarde{display:none}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;background:#eef6f7;color:#183a42;font-family:Arial,sans-serif}
+main{width:min(100%,480px);padding:28px 22px;background:white;border-radius:16px;text-align:center;box-shadow:0 8px 26px #1b4c591a}
+h1{font-size:22px;margin:0 0 12px}p{font-size:14px;line-height:1.5;color:#57717a}
+#erro{color:#a32a2a;display:none}
+a{color:#145ca8}
 </style>
 </head>
 <body>
 <main>
 <h1>Pagamento via Pix</h1>
-<p id="aguarde">Abrindo a página completa do seu pagamento...</p>
-<div id="erro" role="alert">Link de pagamento inválido ou incompleto. Solicite um novo link ao atendente.</div>
+<p id="carregando">Abrindo os detalhes do pagamento...</p>
+<p id="erro">Link de pagamento inválido ou incompleto. Solicite um novo link ao atendente.</p>
 </main>
 <script>
 (function(){
@@ -32,11 +31,11 @@ p{color:#57717a;font-size:14px;line-height:1.5}
     && /^\/macros\/s\/[A-Za-z0-9_-]+\/(exec|dev)$/.test(url.pathname)
     && !url.search && !url.hash;
   if(!validId||!validApi){
+    document.getElementById('carregando').style.display='none';
     document.getElementById('erro').style.display='block';
     return;
   }
   url.searchParams.set('p',id);
-  document.getElementById('aguarde').style.display='block';
   location.replace(url.href);
 })();
 </script>
