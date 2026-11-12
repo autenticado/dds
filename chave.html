@@ -1,32 +1,44 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pagamento via Pix</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#eef6f7;font-family:Arial,sans-serif;color:#183a42}
-main{max-width:600px;margin:24px auto;padding:0 12px}
-header{text-align:center;margin:10px 0 18px}header h1{font-size:23px;margin:8px 0}header p{color:#57717a;font-size:14px}
-.frame{background:#fff;border-radius:18px;box-shadow:0 8px 26px #1b4c591a;overflow:hidden}
-iframe{display:block;border:0;width:100%;height:780px}
-#erro{padding:30px 20px;text-align:center;color:#a32a2a;display:none}
-footer{font-size:12px;text-align:center;color:#59747c;margin:20px auto}
-@media(max-width:600px){main{margin:10px auto;padding:0 7px}iframe{height:800px}}
-</style></head><body><main>
-<header><h1>Pagamento via Pix</h1><p>Escaneie o QR Code ou copie o código para pagar pelo seu banco.</p></header>
-<section class="frame"><div id="erro">Link de pagamento inválido ou incompleto. Solicite um novo link ao atendente.</div>
-<iframe id="pagamento" title="Detalhes do pagamento Pix" referrerpolicy="no-referrer" loading="eager"></iframe></section>
-<footer>Confira o nome do recebedor e o valor no aplicativo do banco antes de confirmar o Pix. Esta página não confirma pagamentos.</footer>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#eef6f7;font-family:Arial,sans-serif;color:#183a42;display:flex;align-items:center;justify-content:center}
+main{width:min(100%,600px);padding:24px 16px;text-align:center}
+h1{font-size:23px;margin:8px 0 12px}
+p{color:#57717a;font-size:14px;line-height:1.5}
+#erro{display:none;color:#a32a2a;background:#fff;padding:24px 18px;border-radius:16px}
+#aguarde{display:none}
+</style>
+</head>
+<body>
+<main>
+<h1>Pagamento via Pix</h1>
+<p id="aguarde">Abrindo a página completa do seu pagamento...</p>
+<div id="erro" role="alert">Link de pagamento inválido ou incompleto. Solicite um novo link ao atendente.</div>
 </main>
 <script>
 (function(){
- const params=new URLSearchParams(location.search), id=params.get('p')||'', api=params.get('api')||'';
- const validId=/^[a-f0-9]{64}$/i.test(id);
- let url=null;
- try{url=new URL(api);}catch(e){}
- const validApi=url && url.protocol==='https:' && url.hostname==='script.google.com'
-   && /^\/macros\/s\/[A-Za-z0-9_-]+\/(exec|dev)$/.test(url.pathname)
-   && !url.search && !url.hash;
- if(!validId||!validApi){document.getElementById('pagamento').style.display='none';document.getElementById('erro').style.display='block';return;}
- url.searchParams.set('p',id);
- document.getElementById('pagamento').src=url.href;
+  const params=new URLSearchParams(location.search);
+  const id=params.get('p')||'';
+  const api=params.get('api')||'';
+  const validId=/^[a-f0-9]{64}$/i.test(id);
+  let url=null;
+  try{url=new URL(api);}catch(e){}
+  const validApi=url && url.protocol==='https:' && url.hostname==='script.google.com'
+    && /^\/macros\/s\/[A-Za-z0-9_-]+\/(exec|dev)$/.test(url.pathname)
+    && !url.search && !url.hash;
+  if(!validId||!validApi){
+    document.getElementById('erro').style.display='block';
+    return;
+  }
+  url.searchParams.set('p',id);
+  document.getElementById('aguarde').style.display='block';
+  location.replace(url.href);
 })();
-</script></body></html>
+</script>
+</body>
+</html>
