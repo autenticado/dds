@@ -360,7 +360,7 @@
           ? numero.toLocaleString('pt-BR', {style:'currency',currency:'BRL'}) : 'Valor não informado no código';
         const cpf = String(d.cpf || '').replace(/\D/g,'');
         const cpfExibido = cpf.length === 11 ? cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4') : '';
-        document.getElementById('dadosClienteExibicao').textContent = d.tipo === 'PRONTO' ? 'Pix fornecido por terceiro. Confira o destinatário no banco.' : ('Nome do cliente: ' + String(d.nome || '') + (cpfExibido ? ' - CPF: ' + cpfExibido : ''));
+        document.getElementById('dadosClienteExibicao').textContent = d.tipo === 'PRONTO' ? (d.valorInformativo ? 'Valor informado para exibição; não está fixado no código Pix. Confira o valor e o destinatário no banco.' : 'Pix fornecido por terceiro. Confira o destinatário no banco.') : ('Nome do cliente: ' + String(d.nome || '') + (cpfExibido ? ' - CPF: ' + cpfExibido : ''));
         document.getElementById('beneficiario').textContent = 'Beneficiário indicado no código Pix: ' + String(d.recebedor || '') + (d.chave ? ' | Chave: ' + String(d.chave) : '');
         codigoCampo.value = codigoPix;
         areaQr.innerHTML = '';
